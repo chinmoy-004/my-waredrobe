@@ -17,7 +17,10 @@ export const env = {
   geminiModel: read("GEMINI_MODEL") ?? "gemini-2.5-flash",
   hfToken: read("HF_TOKEN"),
   hfSpace: read("HF_VTON_SPACE") ?? "yisol/IDM-VTON",
+  replicateToken: read("REPLICATE_API_TOKEN"),
 };
+
+export const isReplicateConfigured = (): boolean => env.replicateToken !== null;
 
 export const isMongoConfigured = (): boolean => env.mongoUri !== null;
 
