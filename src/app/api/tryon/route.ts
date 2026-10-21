@@ -346,7 +346,7 @@ async function tryGeminiImagen(description: string): Promise<string | null> {
         config: {
           numberOfImages: 1,
           aspectRatio: "3:4",
-          personGeneration: "allow_adult",
+          personGeneration: "ALLOW_ADULT" as const,
         },
       }),
       60_000,
