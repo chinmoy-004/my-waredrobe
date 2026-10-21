@@ -1,0 +1,11 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "regions": ["sin1"],
+  "functions": {
+    "src/app/api/stylist/route.ts": { "maxDuration": 60 },
+    "src/app/api/tryon/route.ts": { "maxDuration": 60 }
+  }
+}
