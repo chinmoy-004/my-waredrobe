@@ -89,7 +89,7 @@ export default function CameraCapture({
 
         <div className="flex items-center justify-between border-t border-line px-5 py-4">
           <p className="text-xs text-mute">
-            Center the piece inside the gilded frame. JPEG, 5 MB max.
+            Center the piece inside the gilded frame. Any image format, 50 MB max.
           </p>
           <button
             type="button"
