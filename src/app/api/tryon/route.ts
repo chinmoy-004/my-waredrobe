@@ -13,7 +13,7 @@ interface ImageBytes {
   mime: string;
 }
 
-const DATA_URL_PATTERN = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/;
+const DATA_URL_PATTERN = /^data:(image\/[a-zA-Z0-9.+_-]+);base64,([A-Za-z0-9+/=]+)$/;
 
 function fromDataUrl(ref: string): ImageBytes | null {
   const match = DATA_URL_PATTERN.exec(ref);
@@ -31,7 +31,7 @@ async function fetchGuarded(url: string, timeoutMs: number): Promise<ImageBytes 
   if (!response.ok) return null;
 
   const mime = (response.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
-  if (!["image/jpeg", "image/png", "image/webp"].includes(mime)) return null;
+  if (!mime.startsWith("image/")) return null;
 
   const declared = Number.parseInt(response.headers.get("content-length") ?? "", 10);
   if (Number.isFinite(declared) && declared > MAX_UPLOAD_BYTES) return null;
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
   const gate = guard(request, { bucket: "tryon", limit: 6, windowMs: 60_000 });
   if (!gate.ok) return gate.response;
 
-  const body = await readJsonBody(request, 9_000_000);
+  const body = await readJsonBody(request, 105_000_000);
   if (!body.ok) return body.response;
 
   const parsed = tryonBodySchema.safeParse(body.data);
