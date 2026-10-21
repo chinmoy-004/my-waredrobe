@@ -74,8 +74,8 @@ const imageRef = (max: number) =>
 
 /* ── POST /api/tryon ── */
 export const tryonBodySchema = z.strictObject({
-  bodyImageUrl: imageRef(7_500_000),
-  garmentImageUrl: imageRef(7_500_000),
+  bodyImageUrl: imageRef(52_428_800),
+  garmentImageUrl: imageRef(52_428_800),
   garmentDescription: z.string().trim().max(180).optional(),
 });
 export type TryonBodyInput = z.infer<typeof tryonBodySchema>;
