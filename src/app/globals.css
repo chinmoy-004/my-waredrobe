@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0a0d;
+  --color-coal: #101015;
+  --color-panel: #15151c;
+  --color-line: #262532;
+  --color-gold: #d4af6a;
+  --color-gold-deep: #a9853f;
+  --color-gold-soft: #eeddb2;
+  --color-ivory: #f0ebdf;
+  --color-mute: #9d968a;
+  --color-ember: #c05d34;
+
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-instrument), Georgia, serif;
+
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 10s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  background-image:
+    radial-gradient(1000px 520px at 88% -10%, rgba(212, 175, 106, 0.09), transparent 62%),
+    radial-gradient(820px 520px at -10% 18%, rgba(96, 78, 128, 0.08), transparent 55%),
+    radial-gradient(700px 500px at 50% 110%, rgba(192, 93, 52, 0.05), transparent 60%);
+  color: var(--color-ivory);
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--color-ink); }
+::-webkit-scrollbar-thumb {
+  background: #2b2933;
+  border-radius: 8px;
+  border: 2px solid var(--color-ink);
+}
+::-webkit-scrollbar-thumb:hover { background: #3d3a48; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.text-outline {
+  -webkit-text-stroke: 1px rgba(212, 175, 106, 0.4);
+  color: transparent;
+}
