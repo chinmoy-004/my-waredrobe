@@ -44,8 +44,23 @@ export type MoodId = (typeof MOODS)[number]["id"];
 export const MOOD_IDS = MOODS.map((m) => m.id) as [MoodId, ...MoodId[]];
 
 /* ── Upload policy (mirrored server-side; never trust the client alone) ── */
-export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5 MB hard cap
-export const ALLOWED_IMAGE_MIME = ["image/jpeg", "image/png", "image/webp"] as const;
+export const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50 MB hard cap
+export const ALLOWED_IMAGE_MIME = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/bmp",
+  "image/tiff",
+  "image/tif",
+  "image/avif",
+  "image/heic",
+  "image/heif",
+  "image/svg+xml",
+  "image/x-icon",
+  "image/vnd.microsoft.icon",
+] as const;
 export const CLOUDINARY_DELIVERY_HOST = "res.cloudinary.com";
 export const CLOUDINARY_UPLOAD_FOLDERS = ["atelier/wardrobe", "atelier/profiles"] as const;
 
@@ -128,7 +143,7 @@ export function isCloudinaryDeliveryUrl(url: string, cloudName: string | null): 
   }
 }
 
-const DATA_IMAGE_PATTERN = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
+const DATA_IMAGE_PATTERN = /^data:image\/[a-zA-Z0-9.+_-]+;base64,[A-Za-z0-9+/=]+$/;
 const LOCAL_ASSET_PATTERN = /^\/images\/[a-z0-9-]+\.(jpg|jpeg|png|webp)$/;
 
 /** Accepts only: our Cloudinary deliveries, in-session data-URL captures, or bundled demo assets. */
