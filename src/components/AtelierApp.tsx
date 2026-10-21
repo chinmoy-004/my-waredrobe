@@ -304,6 +304,7 @@ export default function AtelierApp() {
   const [stylistBusy, setStylistBusy] = useState(false);
   const [tryon, setTryon] = useState<TryonResult | null>(null);
   const [tryonBusy, setTryonBusy] = useState(false);
+  const [tryonStage, setTryonStage] = useState<string>("");
 
   const [saving, setSaving] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -580,6 +581,23 @@ export default function AtelierApp() {
       return;
     }
     setTryonBusy(true);
+    setTryon(null);
+
+    // Cycle through stage messages to keep user informed during long renders
+    const stages = [
+      "Connecting to rendering pipeline...",
+      "GPU warming up — this takes ~1-2 min on first run...",
+      "Draping garment onto your body photo...",
+      "Refining details and lighting...",
+      "Finalising full-body render...",
+    ];
+    let stageIdx = 0;
+    setTryonStage(stages[0]);
+    const stageTimer = setInterval(() => {
+      stageIdx = Math.min(stageIdx + 1, stages.length - 1);
+      setTryonStage(stages[stageIdx]);
+    }, 25_000);
+
     try {
       const result = await apiFetch<TryonResult>(
         "/api/tryon",
@@ -596,7 +614,9 @@ export default function AtelierApp() {
     } catch (error) {
       setToast(error instanceof ApiError ? error.message : "The fitting room is unavailable.");
     } finally {
+      clearInterval(stageTimer);
       setTryonBusy(false);
+      setTryonStage("");
     }
   }, [byId, effectiveBodyId, effectiveGarmentId]);
 
@@ -1054,8 +1074,8 @@ export default function AtelierApp() {
                 {tryonBusy ? "Rendering the drape…" : "Run virtual fitting"}
               </button>
               <p className="mt-4 text-[11px] leading-relaxed text-mute">
-                GPU queue is the strictest route we guard — 6 renders / minute. Free-tier queues can
-                be cold; the room falls back to a staged preview instead of failing.
+                3-provider AI pipeline: IDM-VTON → Replicate → SDXL. First run may take
+                1-2 minutes while the GPU warms up — it never falls back to a plain photo.
               </p>
             </div>
           </div>
@@ -1076,10 +1096,20 @@ export default function AtelierApp() {
                     />
                   ) : (
                     <div className="flex aspect-[3/4] w-full items-center justify-center">
-                      <div className="text-center">
-                        <Loader2 className="mx-auto h-8 w-8 animate-spin text-gold" />
-                        <p className="mt-4 text-xs uppercase tracking-[0.3em] text-mute">
-                          Diffusion in progress
+                      <div className="text-center px-6">
+                        <div className="relative mx-auto h-16 w-16">
+                          <Loader2 className="h-16 w-16 animate-spin text-gold/30" />
+                          <Scan className="absolute inset-0 m-auto h-7 w-7 text-gold" />
+                        </div>
+                        <p className="mt-5 text-xs uppercase tracking-[0.3em] text-gold">
+                          Rendering
+                        </p>
+                        <p className="mt-2 max-w-xs text-[11px] leading-relaxed text-mute">
+                          {tryonStage || "Connecting to rendering pipeline..."}
+                        </p>
+                        <p className="mt-3 text-[10px] text-mute/60">
+                          GPU cold-starts can take 1-2 minutes.
+                          <br />3 providers are tried automatically.
                         </p>
                       </div>
                     </div>
@@ -1093,9 +1123,18 @@ export default function AtelierApp() {
                             : "border-gold/50 bg-gold/10 text-gold"
                         }`}
                       >
-                        {tryon.simulated ? "Staged preview" : "IDM-VTON render"}
+                        {tryon.simulated ? "Staged preview" : "AI rendered"}
                       </span>
-                      <span className="text-[10px] tracking-wide text-mute">{tryon.note}</span>
+                      <span className="max-w-[60%] text-[10px] tracking-wide text-mute">{tryon.note}</span>
+                      {!tryon.simulated && (
+                        <a
+                          href={tryon.imageUrl}
+                          download="atelier-tryon.jpg"
+                          className="rounded-full border border-gold/40 bg-ink/60 px-3 py-1 text-[9px] uppercase tracking-[0.2em] text-gold transition hover:bg-gold/10"
+                        >
+                          Download
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>
