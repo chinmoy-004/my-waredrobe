@@ -43,20 +43,36 @@ export async function apiFetch<T>(input: string, init?: RequestInit): Promise<T>
   return data as T;
 }
 
-const ALLOWED_MIME = ["image/jpeg", "image/png", "image/webp"];
-const MAX_BYTES = 5 * 1024 * 1024;
+const ALLOWED_MIME = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/bmp",
+  "image/tiff",
+  "image/tif",
+  "image/avif",
+  "image/heic",
+  "image/heif",
+  "image/svg+xml",
+  "image/x-icon",
+  "image/vnd.microsoft.icon",
+];
+const MAX_BYTES = 50 * 1024 * 1024;
 
 export function validateClientImage(file: File): void {
-  if (!ALLOWED_MIME.includes(file.type)) {
-    throw new ApiError("Only JPEG, PNG or WebP images are allowed.", 422);
+  const isImage = file.type.startsWith("image/") || ALLOWED_MIME.includes(file.type);
+  if (!isImage) {
+    throw new ApiError("Only image files are allowed.", 422);
   }
   if (file.size > MAX_BYTES) {
-    throw new ApiError("Images must be 5 MB or smaller.", 413);
+    throw new ApiError("Images must be 50 MB or smaller.", 413);
   }
 }
 
 export function dataUrlToFile(dataUrl: string, name: string): File {
-  const match = /^data:(image\/(?:jpeg|png|webp));base64,(.+)$/.exec(dataUrl);
+  const match = /^data:(image\/[a-zA-Z0-9.+_-]+);base64,(.+)$/.exec(dataUrl);
   if (!match) throw new ApiError("Unsupported capture format.", 422);
   const binary = atob(match[2]);
   const bytes = new Uint8Array(binary.length);
