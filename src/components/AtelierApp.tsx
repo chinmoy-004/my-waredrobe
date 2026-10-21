@@ -1346,7 +1346,7 @@ export default function AtelierApp() {
                 </div>
 
                 <p className="rounded-lg border border-line bg-ink/50 px-4 py-3 text-[11px] leading-relaxed text-mute">
-                  Every field above is optional. JPEG / PNG / WebP, 5 MB max — validated here,
+                  Every field above is optional. Any image format, 50 MB max — validated here,
                   re-verified on the server, and signed into Cloudinary before MongoDB ever sees it.
                 </p>
               </div>
@@ -1373,7 +1373,7 @@ export default function AtelierApp() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/jpeg,image/png,image/webp"
+                  accept="image/*"
                   multiple
                   className="hidden"
                   onChange={(e) => {
