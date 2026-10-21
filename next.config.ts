@@ -33,7 +33,7 @@ const securityHeaders: { key: string; value: string }[] = [
   // Camera is required for the wardrobe capture feature; everything else stays disabled.
   {
     key: "Permissions-Policy",
-    value: "camera=(self), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+    value: "camera=(self), microphone=(), geolocation=(), payment=(), usb=()",
   },
   {
     key: "Strict-Transport-Security",
