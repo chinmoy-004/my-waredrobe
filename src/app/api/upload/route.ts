@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
   if (!isCloudinaryConfigured() || !isMongoConfigured()) return jsonError(503);
 
-  const body = await readJsonBody(request, 50_000);
+  const body = await readJsonBody(request, 105_000_000);
   if (!body.ok) return body.response;
 
   const parsed = wardrobeMetadataSchema.safeParse(body.data);
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
   const input = parsed.data;
 
-  // Zero-trust delivery URL verification.
+  // Zero-trust delivery URL verification — accept any image MIME from Cloudinary
   if (!isCloudinaryDeliveryUrl(input.imageUrl, env.cloudName)) return jsonError(422);
   if (!input.imageUrl.includes(`/${input.publicId}`)) return jsonError(422);
   const expectedFolder = input.kind === "profile" ? "atelier/profiles/" : "atelier/wardrobe/";
